@@ -1,15 +1,12 @@
-// server.js
 const app = require('./app');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-// Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
