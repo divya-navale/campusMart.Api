@@ -5,6 +5,42 @@ const productSchema = new mongoose.Schema({
       type: String,
       required: true,
    },
+   category: {
+      type: String,
+      required: true,
+   },
+   negotiable: {
+      type: Boolean,
+      required: true,
+   },
+   ageYears: {
+      type: Number,
+      required: true,
+   },
+   ageMonths: {
+      type: Number,
+      required: true,
+   },
+   ageDays: {
+      type: Number,
+      required: true,
+   },
+   description: {
+      type: String,
+      required: true,
+   },
+   availableTill: {
+      type: Date,
+      required: true,
+   },
+   condition: {
+      type: String,
+      required: true,
+   },
+   usage: {
+      type: String,
+      required: true,
+   },
    price: {
       type: Number,
       required: true,
