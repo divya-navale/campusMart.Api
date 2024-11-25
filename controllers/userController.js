@@ -87,7 +87,6 @@ const getUser = async (req, res) => {
   }
 };
 
-
 const verifyUser = async (req, res) => {
   try {
     const { email, password } = req.body;

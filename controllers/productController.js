@@ -12,13 +12,33 @@ const getAllProducts = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    const { name, description, price } = req.body;
+    const {
+      name,
+      category,
+      negotiable,
+      ageYears,
+      ageMonths,
+      ageDays,
+      description,
+      availableTill,
+      condition,
+      usage,
+      price
+    } = req.body;
 
     const result = await cloudinary.uploader.upload(req.file.path);
 
     const newProduct = new Product({
       name,
+      category,
+      negotiable,
+      ageYears,
+      ageMonths,
+      ageDays,
       description,
+      availableTill: new Date(availableTill),
+      condition,
+      usage,
       price,
       imageUrl: result.secure_url,
     });
