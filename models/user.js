@@ -11,11 +11,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  studentId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   password: {
     type: String,
     required: true,
@@ -26,7 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   isVerified: {
     type: Boolean,
-    required: true,
+    required: false,
     default: false,
   }
 });

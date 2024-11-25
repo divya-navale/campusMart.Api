@@ -11,7 +11,11 @@ const userRoutes = require('./routes/userRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}));
 
 app.use('/api', productRoutes);
 app.use('/api', userRoutes);

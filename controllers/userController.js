@@ -1,20 +1,21 @@
-const User = require('../models/User');
+const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 const addUser = async (req, res) => {
   try {
-    const { name, email, studentId, password } = req.body;
+    const { name, email, password, location, isVerified } = req.body;
 
-    const existingUser = await User.findOne({ $or: [{ email }, { studentId }] });
+    const existingUser = await User.findOne({ $or: [{ email }] });
     if (existingUser) {
-      return res.status(400).json({ message: 'Email or Student ID already exists' });
+      return res.status(400).json({ message: 'Email already exists' });
     }
 
     const newUser = new User({
       name,
       email,
-      studentId,
       password,
+      location,
+      isVerified
     });
 
     await newUser.save();
@@ -42,7 +43,7 @@ const deleteUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, studentId, password } = req.body;
+    const { name, email, location, password } = req.body;
 
     let user = await User.findById(id);
     if (!user) {
@@ -51,7 +52,7 @@ const updateUser = async (req, res) => {
 
     user.name = name || user.name;
     user.email = email || user.email;
-    user.studentId = studentId || user.studentId;
+    user.location = location || user.location;
 
     if (password) {
       const salt = await bcrypt.genSalt(10);
