@@ -71,8 +71,41 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const getProductsBySeller = async (req, res) => {
+  try {
+    const { sellerId } = req.params;
+    const products = await Product.find({ seller: sellerId });
+    
+    if (!products.length) {
+      return res.status(404).json({ message: 'No products found for this seller' });
+    }
+
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch products by seller', error: err.message });
+  }
+};
+
+const getProductById = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json(product);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch product', error: err.message });
+  }
+};
+
+
 module.exports = {
   getAllProducts,
   addProduct,
+  getProductsBySeller,
   deleteProduct,
+  getProductById,
 };
