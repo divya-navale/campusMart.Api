@@ -10,6 +10,7 @@ const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
 const otpRoutes = require('./routes/otpRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,6 +24,7 @@ app.use('/api', productRoutes);
 app.use('/api', userRoutes);
 app.use('/api', wishlistRoutes);
 app.use('/api/', otpRoutes);
+app.use('/api', notificationRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
