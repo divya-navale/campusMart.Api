@@ -37,10 +37,6 @@ const productSchema = new mongoose.Schema({
       type: String,
       required: true,
    },
-   usage: {
-      type: String,
-      required: true,
-   },
    price: {
       type: Number,
       required: true,
@@ -54,6 +50,11 @@ const productSchema = new mongoose.Schema({
       default: Date.now,
    },
    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+   },
+   location: {
       type: String,
       required: true,
    }

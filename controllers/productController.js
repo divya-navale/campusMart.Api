@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const cloudinary = require('cloudinary').v2;
+const mongoose = require('mongoose');
 
 const getAllProducts = async (req, res) => {
   try {
@@ -22,9 +23,15 @@ const addProduct = async (req, res) => {
       description,
       availableTill,
       condition,
-      usage,
-      price
+      price,
+      location,
     } = req.body;
+
+    const sellerId = req.user ? req.user._id : req.body.sellerId;
+
+    if (!mongoose.Types.ObjectId.isValid(sellerId)) {
+      return res.status(400).json({ message: 'Invalid sellerId' });
+    }
 
     const result = await cloudinary.uploader.upload(req.file.path);
 
@@ -38,8 +45,9 @@ const addProduct = async (req, res) => {
       description,
       availableTill: new Date(availableTill),
       condition,
-      usage,
       price,
+      sellerId,
+      location,
       imageUrl: result.secure_url,
     });
 
@@ -75,7 +83,7 @@ const getProductsBySeller = async (req, res) => {
   try {
     const { sellerId } = req.params;
     const products = await Product.find({ seller: sellerId });
-    
+
     if (!products.length) {
       return res.status(404).json({ message: 'No products found for this seller' });
     }
