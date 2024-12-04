@@ -79,10 +79,29 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// const getProductsBySeller = async (req, res) => {
+//   try {
+//     const { sellerId } = req.params;
+//     const products = await Product.find({ seller: sellerId });
+
+//     if (!products.length) {
+//       return res.status(404).json({ message: 'No products found for this seller' });
+//     }
+
+//     res.status(200).json(products);
+//   } catch (err) {
+//     res.status(500).json({ message: 'Failed to fetch products by seller', error: err.message });
+//   }
+// };
+
+
+
 const getProductsBySeller = async (req, res) => {
   try {
     const { sellerId } = req.params;
-    const products = await Product.find({ seller: sellerId });
+
+    // Use new to instantiate ObjectId if required by your version of Mongoose
+    const products = await Product.find({ sellerId: new mongoose.Types.ObjectId(sellerId) });
 
     if (!products.length) {
       return res.status(404).json({ message: 'No products found for this seller' });
@@ -90,9 +109,11 @@ const getProductsBySeller = async (req, res) => {
 
     res.status(200).json(products);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Failed to fetch products by seller', error: err.message });
   }
 };
+
 
 const getProductById = async (req, res) => {
   try {
