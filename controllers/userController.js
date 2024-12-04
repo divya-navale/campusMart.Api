@@ -1,5 +1,8 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const { JWT_SECRET, JWT_EXPIRY } = process.env;
 
 const addUser = async (req, res) => {
   try {
@@ -101,17 +104,33 @@ const verifyUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials', verified: false });
     }
 
-    res.status(200).json({ message: 'User verified', verified: true });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRY });
+
+    res
+      .cookie('token', token, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24,
+      })
+      .status(200)
+      .json({ message: 'Login successful', token, verified: true });
   } catch (err) {
     res.status(500).json({ message: 'Failed to verify user', error: err.message, verified: false });
   }
 };
 
+const logoutUser = async (req, res) => {
+  res
+    .clearCookie('token')
+    .status(200)
+    .json({ message: 'Logged out successfully' });
+};
 
 module.exports = {
   addUser,
   deleteUser,
   updateUser,
   getUser,
-  verifyUser
+  verifyUser,
+  logoutUser,
 };

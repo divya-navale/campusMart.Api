@@ -1,12 +1,9 @@
-// routes/notificationRoutes.js
 const express = require('express');
 const router = express.Router();
 const notificationController = require('../controllers/notificationController');
+const authMiddleware = require('./../middleware/authMiddleware');
 
-// Create a notification
-router.post('/notifications', notificationController.createNotification);
-
-// Fetch notifications for a seller
-router.get('/notifications/:sellerId', notificationController.getNotifications);
+router.post('/notifications', authMiddleware, notificationController.createNotification);
+router.get('/notifications/:sellerId', authMiddleware, notificationController.getNotifications);
 
 module.exports = router;
