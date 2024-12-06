@@ -25,13 +25,8 @@ const addProduct = async (req, res) => {
       condition,
       price,
       location,
+      sellerId
     } = req.body;
-
-    const sellerId = req.user ? req.user._id : req.body.sellerId;
-
-    if (!mongoose.Types.ObjectId.isValid(sellerId)) {
-      return res.status(400).json({ message: 'Invalid sellerId' });
-    }
 
     const result = await cloudinary.uploader.upload(req.file.path);
 
