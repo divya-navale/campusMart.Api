@@ -9,7 +9,7 @@ router.put('/users/:id', authMiddleware, updateUser);
 router.get('/users/:id', authMiddleware, getUser);
 router.get('/users/email/:email', getUser);
 router.post('/users/verify', verifyUser);
-router.post('/users/logout', authMiddleware, logoutUser); 
+router.post('/users/logout', logoutUser); 
 router.post('/update-password', updatePassword);
 
 module.exports = router;
