@@ -33,7 +33,7 @@ exports.removeFromWishlist = async (req, res) => {
     const wishlist = await Wishlist.findOne({ userId });
 
     if (!wishlist) {
-      return res.status(404).json({ message: 'Wishlist not found' });
+      return res.status(404).json({ message: 'Wishlists not found' });
     }
 
     wishlist.products = wishlist.products.filter((id) => id.toString() !== productId);
@@ -54,7 +54,7 @@ exports.getWishlist = async (req, res) => {
     const wishlist = await Wishlist.findOne({ userId }).populate('products');
    
     if (!wishlist) {
-      return res.status(404).json({ message: 'Wishlist not found' });
+      return res.status(200).json({ message: 'No wishlisted products for this user' });
     }
 
     res.status(200).json({ wishlist });
