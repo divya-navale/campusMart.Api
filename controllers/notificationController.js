@@ -26,13 +26,23 @@ exports.createNotification = async (req, res) => {
 
 // Fetch notifications for a seller
 exports.getNotifications = async (req, res) => {
-  const { sellerId } = req.params;
-
+  const { userId, userRole } = req.params;    
   try {
-    const notifications = await Notification.find({ sellerId })
-      .populate('buyerId', 'name email') // Populate buyer details
-      .populate('productId', 'name') // Populate product details
-      .sort({ createdAt: -1 }); // Sort by latest notifications
+    let notifications;
+    console.log(userRole);
+    if (userRole === 'buyer') {
+      notifications = await Notification.find({ buyerId: userId })
+        .populate('sellerId', 'name email') 
+        .populate('productId', 'name') 
+        .exec();
+    } else if (userRole === 'seller') {
+      notifications = await Notification.find({ sellerId: userId })
+        .populate('buyerId', 'name email') 
+        .populate('productId', 'name') 
+        .exec();
+    } else {
+      return res.status(400).json({ message: 'Invalid user role' });
+    }
 
     res.status(200).json({ notifications });
   } catch (error) {
