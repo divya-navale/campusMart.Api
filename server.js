@@ -11,6 +11,7 @@ const userRoutes = require('./routes/userRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
 const otpRoutes = require('./routes/otpRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const requestedProductRoutes = require('./routes/requestedProductRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,6 +26,7 @@ app.use('/api', userRoutes);
 app.use('/api', wishlistRoutes);
 app.use('/api', otpRoutes);
 app.use('/api', notificationRoutes);
+app.use('/api', requestedProductRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -42,12 +44,15 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-process.on('SIGINT', () => {
-  console.log('Shutting down gracefully...');
-  mongoose.connection.close(() => {
-    console.log('MongoDB connection closed.');
+process.on('SIGINT', async () => {
+  try {
+    await mongoose.connection.close();
+    console.log('Mongoose connection closed due to app termination');
     process.exit(0);
-  });
+  } catch (err) {
+    console.error('Error while closing the Mongoose connection:', err);
+    process.exit(1);
+  }
 });
 
 module.exports = app;
