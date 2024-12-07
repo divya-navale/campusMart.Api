@@ -48,7 +48,7 @@ exports.sendOTP = async (req, res) => {
       text: `Your OTP is ${otp}. It is valid for 5 minutes.`,
       html: `<p>Your OTP is <strong>${otp}</strong>. It is valid for 5 minutes.</p>`,
     };
-    if (source == 'forgotPassword') {
+    if (source == 'forgot-password') {
       msg.subject = "Your OTP for Password Change"
     }
     await sgMail.send(msg);
