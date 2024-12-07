@@ -3,12 +3,10 @@ const Notification = require('../models/notification');
 
 // Create a notification
 exports.createNotification = async (req, res) => {
-  const { buyerId, sellerId, productId } = req.body;
+  const { buyerId, sellerId, productId, message } = req.body;
 
   try {
-    const message = `Buyer with ID: ${buyerId} is interested in your product with ID: ${productId}.`;
-
-    const notification = new Notification({
+     const notification = new Notification({
       buyerId,
       sellerId,
       productId,
