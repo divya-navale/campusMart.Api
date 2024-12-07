@@ -11,35 +11,29 @@ function generateOTP() {
 }
 
 exports.sendOTP = async (req, res) => {
-  const { email } = req.body;
+  const { email, source } = req.body;
 
   if (!email) {
     return res.status(400).json({ message: 'Email is required' });
   }
 
   try {
-    // Step 1: Check if the user is already verified
     const user = await User.findOne({ email });
-    if(!user){
-      return res.status(400).json({ message: 'User not found'});
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
     }
-    if (user && user.isVerified) {
+    if (source == 'signup' && user && user.isVerified) {
       return res.status(200).json({ message: 'User is already verified', user });
     }
 
-    // Step 2: Check if there is an existing OTP in the otp table
     let otpRecord = await Otp.findOne({ email: email });
 
     const otp = generateOTP();
-
-    console.log(otp);
-    // If OTP record exists, update it
     if (otpRecord) {
       otpRecord.otp = otp.toString();
       otpRecord.createdAt = Date.now();
       await otpRecord.save();
     } else {
-      // If no record exists, create a new OTP entry in the otp table
       otpRecord = new Otp({
         email: email,
         otp: otp.toString(),
@@ -47,17 +41,17 @@ exports.sendOTP = async (req, res) => {
       await otpRecord.save();
     }
 
-    // Send OTP email
-    const msg = {
+    let msg = {
       to: email,
       from: 'navad01@pfw.edu',
       subject: 'Your OTP for Account Verification',
       text: `Your OTP is ${otp}. It is valid for 5 minutes.`,
       html: `<p>Your OTP is <strong>${otp}</strong>. It is valid for 5 minutes.</p>`,
     };
-
+    if (source == 'forgotPassword') {
+      msg.subject = "Your OTP for Password Change"
+    }
     await sgMail.send(msg);
-
     res.status(200).json({ message: 'OTP sent successfully' });
   } catch (error) {
     console.error('Error sending OTP:', error);

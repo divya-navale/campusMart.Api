@@ -101,7 +101,7 @@ const verifyUser = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials', verified: false });
+      return res.status(400).json({ message: 'Invalid credentials', verified: false });
     }
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRY });
