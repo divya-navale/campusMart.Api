@@ -24,7 +24,8 @@ const addProduct = async (req, res) => {
       availableTill,
       condition,
       price,
-      sellerId
+      sellerId,
+      location
     } = req.body;
 
     const result = await cloudinary.uploader.upload(req.file.path);
@@ -41,6 +42,7 @@ const addProduct = async (req, res) => {
       condition,
       price,
       sellerId,
+      location,
       imageUrl: result.secure_url,
     });
 
