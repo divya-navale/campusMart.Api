@@ -54,10 +54,6 @@ const productSchema = new mongoose.Schema({
       ref: 'User',
       required: true,
    },
-   location: {
-      type: String,
-      required: true,
-   }
 });
 
 module.exports = mongoose.model('Product', productSchema);

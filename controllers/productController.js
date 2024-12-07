@@ -24,7 +24,6 @@ const addProduct = async (req, res) => {
       availableTill,
       condition,
       price,
-      location,
       sellerId
     } = req.body;
 
@@ -42,7 +41,6 @@ const addProduct = async (req, res) => {
       condition,
       price,
       sellerId,
-      location,
       imageUrl: result.secure_url,
     });
 

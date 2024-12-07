@@ -6,7 +6,6 @@ exports.getFilteredProducts = async (req, res) => {
     residence,
     priceRange,
     condition,
-    usage,
     age,
     category,
   } = req.query;
@@ -21,7 +20,6 @@ exports.getFilteredProducts = async (req, res) => {
       query.price = { $gte: minPrice, $lte: maxPrice };
     }
     if (condition) query.condition = { $in: condition.split(',') };
-    if (usage) query.usage = { $in: usage.split(',') };
     if (age) query.age = { $in: age.split(',') };
     if (category) query.category = { $in: category.split(',') };
 
