@@ -194,10 +194,17 @@ const getFilteredProducts = async (req, res) => {
     if (residence) {
       query.location = { $in: residence.split(',') };
     }
-    if (priceRange) {
+
+    if (priceRange) 
+    {
+      if (priceRange === '50+') {
+        query.price = { $gte: 50 };  // No upper limit
+      } else{
       const [minPrice, maxPrice] = priceRange.split('-').map(Number);
       query.price = { $gte: minPrice, $lte: maxPrice };
+      }
     }
+    
     if (condition) {
       query.condition = { $in: condition.split(',') };
     }
