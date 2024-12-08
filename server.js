@@ -12,6 +12,7 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 const otpRoutes = require('./routes/otpRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const requestedProductRoutes = require('./routes/requestedProductRoutes');
+const productFilterRoutes = require('./routes/productFilterRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,6 +28,7 @@ app.use('/api', wishlistRoutes);
 app.use('/api', otpRoutes);
 app.use('/api', notificationRoutes);
 app.use('/api', requestedProductRoutes);
+app.use('/api', productFilterRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
