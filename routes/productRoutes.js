@@ -13,7 +13,6 @@ router.get('/products/:id', authMiddleware, getProductById);
 router.get('/products/seller/:sellerId', authMiddleware, getProductsBySeller);
 router.put('/products/:id', authMiddleware, upload.single('image'),  updateProduct);
 router.put('/products/:id/sold',authMiddleware, markProductAsSold);
-const productFilterController = require('../controllers/productFilterController');
 router.get('/filtered-products',authMiddleware, getFilteredProducts);
 
 module.exports = router;
