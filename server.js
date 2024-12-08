@@ -12,7 +12,6 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 const otpRoutes = require('./routes/otpRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const requestedProductRoutes = require('./routes/requestedProductRoutes');
-const productFilterRoutes = require('./routes/productFilterRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +27,6 @@ app.use('/api', wishlistRoutes);
 app.use('/api', otpRoutes);
 app.use('/api', notificationRoutes);
 app.use('/api', requestedProductRoutes);
-app.use('/api', productFilterRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -40,12 +38,13 @@ if (process.env.NODE_ENV !== 'test') {
     .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => app.listen(process.env.PORT || 5000, () => console.log(`Server running on port ${process.env.PORT || 5000}`)))
     .catch((err) => console.error(err));
+
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
 }
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 process.on('SIGINT', async () => {
   try {
