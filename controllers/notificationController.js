@@ -1,8 +1,8 @@
 // controllers/notificationController.js
-const Notification = require('../models/notification');
+import Notification, { find } from '../models/Notification';
 
 // Create a notification
-exports.createNotification = async (req, res) => {
+export async function createNotification(req, res) {
   const { buyerId, sellerId, productId, message } = req.body;
 
   try {
@@ -20,21 +20,21 @@ exports.createNotification = async (req, res) => {
     console.error('Error creating notification:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-};
+}
 
 // Fetch notifications for a seller
-exports.getNotifications = async (req, res) => {
+export async function getNotifications(req, res) {
   const { userId, userRole } = req.params;    
   try {
     let notifications;
     console.log(userRole);
     if (userRole === 'buyer') {
-      notifications = await Notification.find({ buyerId: userId })
+      notifications = await find({ buyerId: userId })
         .populate('sellerId', 'name email') 
         .populate('productId', 'name') 
         .exec();
     } else if (userRole === 'seller') {
-      notifications = await Notification.find({ sellerId: userId })
+      notifications = await find({ sellerId: userId })
         .populate('buyerId', 'name email') 
         .populate('productId', 'name') 
         .exec();
@@ -47,4 +47,4 @@ exports.getNotifications = async (req, res) => {
     console.error('Error fetching notifications:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-};
+}
