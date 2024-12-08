@@ -58,6 +58,11 @@ const productSchema = new mongoose.Schema({
       ref: 'User',
       required: true,
    },
+   isSold: {
+      type: Boolean,
+      required: false,
+      default: false
+   }
 });
 
 module.exports = mongoose.model('Product', productSchema);

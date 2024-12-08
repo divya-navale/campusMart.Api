@@ -62,34 +62,19 @@ const deleteProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
-
     const publicId = product.imageUrl.split('/').pop().split('.')[0];
     await cloudinary.uploader.destroy(publicId);
-
     await Product.findByIdAndDelete(id);
-
+    await Notification.deleteMany({ productId: id });
+    await Wishlist.updateMany(
+      { products: id },
+      { $pull: { products: id } }
+    );
     res.status(200).json({ message: 'Product deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to delete product', error: err.message });
   }
 };
-
-// const getProductsBySeller = async (req, res) => {
-//   try {
-//     const { sellerId } = req.params;
-//     const products = await Product.find({ seller: sellerId });
-
-//     if (!products.length) {
-//       return res.status(404).json({ message: 'No products found for this seller' });
-//     }
-
-//     res.status(200).json(products);
-//   } catch (err) {
-//     res.status(500).json({ message: 'Failed to fetch products by seller', error: err.message });
-//   }
-// };
-
-
 
 const getProductsBySeller = async (req, res) => {
   try {
@@ -125,6 +110,76 @@ const getProductById = async (req, res) => {
   }
 };
 
+const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      category,
+      negotiable,
+      ageYears,
+      ageMonths,
+      ageDays,
+      description,
+      availableTill,
+      condition,
+      price,
+      sellerId,
+      location
+    } = req.body;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    let updatedImageUrl = product.imageUrl;
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      updatedImageUrl = result.secure_url;
+    }
+
+    product.name = name || product.name;
+    product.category = category || product.category;
+    product.negotiable = negotiable !== undefined ? negotiable : product.negotiable;
+    product.ageYears = ageYears || product.ageYears;
+    product.ageMonths = ageMonths || product.ageMonths;
+    product.ageDays = ageDays || product.ageDays;
+    product.description = description || product.description;
+    product.availableTill = availableTill ? new Date(availableTill) : product.availableTill;
+    product.condition = condition || product.condition;
+    product.price = price || product.price;
+    product.sellerId = sellerId || product.sellerId;
+    product.location = location || product.location;
+    product.imageUrl = updatedImageUrl;
+
+    const updatedProduct = await product.save();
+
+    res.status(200).json({ message: 'Product updated successfully', product: updatedProduct });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update product', error: err.message });
+  }
+};
+
+const markProductAsSold = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    product.isSold = true;
+    const updatedProduct = await product.save();
+    res.status(200).json({ message: 'Product marked as sold successfully', product: updatedProduct });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to mark product as sold', error: error.message });
+  }
+};
+
+module.exports = { markProductAsSold };
+
 
 module.exports = {
   getAllProducts,
@@ -132,4 +187,6 @@ module.exports = {
   getProductsBySeller,
   deleteProduct,
   getProductById,
+  updateProduct,
+  markProductAsSold,
 };
