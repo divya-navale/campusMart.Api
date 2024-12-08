@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const Notification = require('../models/Notification');
+const Wishlist = require('../models/wishlist')
 const cloudinary = require('cloudinary').v2;
 const mongoose = require('mongoose');
 
