@@ -47,3 +47,22 @@ exports.getNotifications = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+
+exports.deleteNotifications = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    if (!id) {
+      return res.status(400).json({ message: 'Product ID is required' });
+    }
+    const result = await Notification.deleteMany({ productId: id });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'No notifications found for this product' });
+    }
+    res.status(200).json({ message: `${result.deletedCount} notifications deleted successfully` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to delete notifications', error: err.message });
+  }
+}
+

@@ -63,3 +63,22 @@ exports.getWishlist = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+exports.removeProductFromAllWishlists = async (req, res) => {
+  const { productId } = req.params; 
+  try {
+    const wishlists = await Wishlist.find({ "products": productId });
+    if (wishlists.length === 0) {
+      return res.status(404).json({ message: 'No wishlists found with this product' });
+    }
+    for (let wishlist of wishlists) {
+      wishlist.products = wishlist.products.filter((id) => id.toString() !== productId);
+      await wishlist.save();
+    }
+    res.status(200).json({ message: 'Product removed from all wishlists' });
+  } catch (error) {
+    console.error('Error removing product from all wishlists:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

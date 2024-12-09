@@ -1,6 +1,4 @@
 const Product = require('../models/Product');
-const Notification = require('../models/Notification');
-const Wishlist = require('../models/wishlist')
 const cloudinary = require('cloudinary').v2;
 const mongoose = require('mongoose');
 
@@ -67,11 +65,6 @@ const deleteProduct = async (req, res) => {
     const publicId = product.imageUrl.split('/').pop().split('.')[0];
     await cloudinary.uploader.destroy(publicId);
     await Product.findByIdAndDelete(id);
-    await Notification.deleteMany({ productId: id });
-    await Wishlist.updateMany(
-      { products: id },
-      { $pull: { products: id } }
-    );
     res.status(200).json({ message: 'Product deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to delete product', error: err.message });
