@@ -3,4 +3,7 @@
 npm install
 npm run dev
 
-add .env file also
+to test:
+npm test
+
+DONT FORGET TO ADD .env
