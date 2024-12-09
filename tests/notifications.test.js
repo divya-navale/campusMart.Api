@@ -1,7 +1,7 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const app = require('../server');
-const Notification = require('../models/Notification');
+const Notification = require('../models/notification');
 const mockingoose = require('mockingoose');
 
 describe('Notification Controller', () => {

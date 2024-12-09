@@ -2,7 +2,7 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const jwt = require('jsonwebtoken');
-const app = require('../server'); // Adjust the path to your Express app
+const app = require('../server');
 const RequestedProduct = require('../models/requestedProduct');
 
 let mongoServer;
@@ -10,12 +10,10 @@ let authToken;
 const userId = new mongoose.Types.ObjectId();
 
 beforeAll(async () => {
-  // Initialize in-memory MongoDB server
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
   await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-  // Generate JWT for authentication
   authToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
 });
 
@@ -71,7 +69,6 @@ describe('Requested Product APIs', () => {
   });
 
   test('should fetch all requested products', async () => {
-    // Create a product request first
     await new RequestedProduct({
       productName: 'Test Product',
       productCategory: 'Electronics',
