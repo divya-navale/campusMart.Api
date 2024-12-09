@@ -1,6 +1,7 @@
 # campusMart-backend
 
 npm install
+
 npm run dev
 
 to test:
