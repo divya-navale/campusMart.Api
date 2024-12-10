@@ -57,7 +57,7 @@ exports.deleteNotifications = async (req, res) => {
     }
     const result = await Notification.deleteMany({ productId: id });
     if (result.deletedCount === 0) {
-      return res.status(404).json({ message: 'No notifications found for this product' });
+      return res.status(200).json({ message: 'No notifications found for this product' });
     }
     res.status(200).json({ message: `${result.deletedCount} notifications deleted successfully` });
   } catch (err) {
